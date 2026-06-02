@@ -1,0 +1,26 @@
+\section{GRU-Assisted PEP Framework}
+\label{sec:framework}
+
+\subsection{Design Overview}
+The proposed framework enhances PEPesc through three coordinated layers: perception, decision, and execution. The perception layer estimates dynamic link bandwidth and loss conditions from proxy-side observations. The decision layer maps the perceived state and feedback trends into explicit control states. The execution layer applies bounded pacing correction and FEC protection to avoid unstable behavior. The framework is designed around two principles. First, the original PEPesc logic should remain the stable baseline, so the learning component only corrects estimation errors rather than directly replacing the control loop. Second, dynamic adaptation should improve recovery and queue control without degrading steady-state transmission capability.
+
+\subsection{Hybrid Residual GRU Perception}
+The perception layer receives observations collected at the proxy, including estimated bandwidth, probing bandwidth, RTT, queue delay, ACK interval, loss rate, and their temporal variations. A rule-based estimator is preserved as the baseline because it provides deterministic behavior and robustness under abnormal inputs. However, rule-based estimation can lag behind link changes near switching boundaries. To improve dynamic perception, we introduce a hybrid residual GRU model.
+
+Let $\hat{b}_{r}$ and $\hat{l}_{r}$ denote the bandwidth and loss-rate estimates produced by the rule-based estimator. The GRU model predicts residual corrections $\Delta b$ and $\Delta l$ from a recent observation window. The final perceived states are computed as
+\begin{equation}
+\hat{b}=\max(0,\hat{b}_{r}+\Delta b), \quad
+\hat{l}=\max(0,\hat{l}_{r}+\Delta l),
+\label{eq:residual}
+\end{equation}
+where $\hat{b}$ and $\hat{l}$ are used by the subsequent decision logic. This residual design reduces the burden on the neural model: it does not need to learn the entire estimation process from scratch, but only learns the systematic deviation between rule-based outputs and reference link states. Non-negative constraints and smoothing are applied to suppress short-term prediction noise.
+
+\subsection{ACCEL/HOLD/BRAKE Decision Mechanism}
+Dynamic link control benefits from explicit control semantics. We divide the decision output into three states. \textbf{ACCEL} indicates that the link appears to be recovering or underutilized, so pacing may be moderately increased. \textbf{HOLD} indicates that the current transmission state is relatively stable, so the system should avoid unnecessary perturbation. \textbf{BRAKE} indicates that congestion or feedback deterioration is likely, so pacing should be suppressed to reduce queue pressure.
+
+The state is determined by combining perceived bandwidth, loss behavior, RTT gradient, queue delay, ACK gap, and decoding status. Random loss and congestion-related loss are treated differently: random loss should be absorbed primarily by FEC recovery, whereas loss accompanied by RTT growth and queue buildup should trigger more conservative pacing. By using explicit states rather than an opaque continuous action, the system remains interpretable and easier to debug.
+
+\subsection{Conservative Execution and FEC Reliability Floor}
+The execution layer translates the decision state into bounded pacing and FEC actions. Instead of discarding the original PEPesc execution logic, the enhanced system uses a legacy baseline plus adaptive correction strategy. The adaptive correction is limited by step-size and safety constraints, reducing the risk of oscillation caused by prediction errors.
+
+FEC control is also constrained. In dynamic scenarios, reducing redundancy too aggressively may cause decoding stalls, feedback interruption, and connection instability. Therefore, the proposed framework introduces an FEC reliability floor, which ensures that the actual repair-packet ratio does not fall below the minimum level required for streaming recovery. This design treats FEC as a reliability baseline rather than a freely compressible overhead.
