@@ -1,0 +1,8 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper presented a GRU-assisted performance enhancing proxy for adaptive transmission over dynamic high-latency networks. Built on PEPesc, the proposed framework integrates hybrid residual GRU-based link perception, ACCEL/HOLD/BRAKE state-based decision making, conservative pacing correction, and an FEC reliability floor. The design preserves the stable rule-based baseline while using temporal learning to improve perception under dynamic bandwidth and loss conditions.
+
+Mininet-based experiments show that the enhanced system improves receiver throughput in static scenarios, accelerates recovery after dynamic link switching, reduces throughput deficit and p95 queue delay, and extends effective running time under long-duration dynamic switching. These results suggest that combining lightweight neural perception with interpretable control states and conservative execution constraints is a practical approach for improving transmission quality in dynamic high-latency PEP systems.
+
+Future work will evaluate the framework under more diverse network conditions, including multi-flow traffic, more complex satellite-like dynamics, and encrypted transport scenarios. Additional work is also needed to study online adaptation and model robustness when the deployment environment differs from the training traces.
