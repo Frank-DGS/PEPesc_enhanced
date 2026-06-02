@@ -1,0 +1,38 @@
+\section{Evaluation Results}
+\label{sec:evaluation}
+
+\subsection{Static Scenarios}
+Static scenarios are used to examine whether the proposed enhancement preserves the steady-state capability of the original proxy system. Across five static scenarios, the enhanced system achieves higher receiver throughput than the original PEPesc baseline, with an average improvement of approximately 7.6\%. This result indicates that the added GRU-assisted perception and adaptive control logic do not introduce a steady-state penalty. Instead, the enhanced perception and bounded pacing correction slightly improve link utilization under stable conditions.
+
+\begin{table}[t]
+\centering
+\caption{Summary of main experimental results.}
+\label{tab:main_results}
+\begin{tabular}{lll}
+\toprule
+Metric & Baseline PEPesc & Enhanced system \\
+\midrule
+Average static throughput & -- & +7.6\% \\
+Average dynamic throughput & 13.17 Mbps & 13.62 Mbps \\
+Recovery time after switching & 1.089 s & 0.664 s \\
+Throughput deficit area & -- & -20.0\% \\
+p95 queue delay & 137.6 ms & 44.1 ms \\
+Long-duration effective time & 100.9 s & 188.4 s \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Representative Dynamic Scenario}
+The representative dynamic scenario contains multiple stages with changing bandwidth and loss rate. Compared with the baseline, the enhanced system improves average receiver throughput from 13.17~Mbps to 13.62~Mbps. More importantly, it reduces the average recovery time after link switching from 1.089~s to 0.664~s. The throughput deficit area is reduced by approximately 20.0\%, showing that the enhanced system can recover more quickly after link changes.
+
+The improvement is mainly attributed to two factors. First, the hybrid residual GRU reduces the lag of link perception near switching boundaries, allowing the proxy to recognize bandwidth and loss changes earlier. Second, the ACCEL/HOLD/BRAKE mechanism provides explicit recovery and suppression semantics. When the link improves, the system can enter ACCEL and increase pacing conservatively. When queue pressure grows, the system can enter BRAKE and suppress traffic injection before excessive backlog accumulates.
+
+\subsection{Queue Delay and RTT Behavior}
+Queue control is a key objective in dynamic high-latency networks. In the representative dynamic scenario, the p95 queue delay decreases from 137.6~ms to 44.1~ms, corresponding to a reduction of about 68.0\%. The p95 RTT also decreases, indicating that the improvement is not limited to average throughput. Lower tail delay suggests that the enhanced system avoids prolonged queue buildup during link transitions.
+
+This behavior is consistent with the execution design. The adaptive correction is bounded rather than aggressive, and the BRAKE state is triggered when queue and RTT signals indicate feedback deterioration. As a result, the system can improve recovery while maintaining stronger queue discipline.
+
+\subsection{Long-Duration Dynamic Switching}
+Long-duration experiments evaluate whether the control loop remains stable when dynamic switching continues for an extended period. In these experiments, the baseline system suffers from shorter effective operation under repeated link changes. The enhanced system increases average effective running time from 100.9~s to 188.4~s, an improvement of approximately 86.7\%.
+
+The long-duration result is important because a method that only improves short-term throughput may still fail under continuous dynamics. The observed improvement indicates that the combination of residual perception, state-based decision, conservative execution, and FEC reliability protection improves not only local recovery behavior but also long-term robustness.
