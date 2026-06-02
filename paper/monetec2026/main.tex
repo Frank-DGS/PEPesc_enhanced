@@ -1,0 +1,43 @@
+\documentclass[runningheads]{llncs}
+
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{xcolor}
+
+\begin{document}
+
+\title{GRU-Assisted Performance Enhancing Proxy for Adaptive Transmission over Dynamic High-Latency Networks}
+
+\titlerunning{GRU-Assisted PEP for Dynamic High-Latency Networks}
+
+\author{Guangshuo Dong\inst{1}\orcidID{0000-0000-0000-0000} \and
+Pengjin Xie\inst{1}\orcidID{0000-0000-0000-0000}}
+
+\authorrunning{G. Dong and P. Xie}
+
+\institute{Beijing University of Posts and Telecommunications, Beijing, China\\
+\email{dgs20040108@bupt.edu.cn}\quad \email{xiepengjin@bupt.edu.cn}}
+
+\maketitle
+
+\begin{abstract}
+Stable transmission quality over dynamic high-latency networks is difficult to maintain because end-to-end control suffers from long feedback loops, delayed link-state perception, and slow recovery after link changes. Performance Enhancing Proxies (PEPs) mitigate this problem by moving buffering, local control, and recovery functions closer to bottleneck links, but conventional proxy systems may still react slowly when bandwidth and loss conditions vary. This paper proposes a GRU-assisted performance enhancing proxy for adaptive transmission over dynamic high-latency networks. Built on PEPesc, the proposed framework combines hybrid residual GRU-based link perception, an ACCEL/HOLD/BRAKE three-state decision mechanism, conservative pacing correction, and an FEC reliability floor. Experiments show that the method improves receiver throughput by about 7.6\% across five static scenarios, reduces recovery time from 1.089~s to 0.664~s in a representative dynamic scenario, decreases throughput deficit area by about 20.0\%, lowers p95 queue delay by about 68.0\%, and increases effective running time under long-duration dynamic switching by about 86.7\%.
+\keywords{Performance Enhancing Proxy \and High-Latency Networks \and Dynamic Links \and GRU-Assisted Perception \and Forward Error Correction \and Adaptive Transmission}
+\end{abstract}
+
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_framework}
+\input{sections/04_implementation_setup}
+\input{sections/05_evaluation}
+\input{sections/06_discussion}
+\input{sections/07_conclusion}
+
+\bibliographystyle{splncs04}
+\bibliography{references}
+
+\end{document}
